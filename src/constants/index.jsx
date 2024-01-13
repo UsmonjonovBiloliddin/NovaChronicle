@@ -1,0 +1,1 @@
+export const image = "https://media.licdn.com/dms/image/C4D1BAQHxINS0YZXisg/company-background_10000/0/1583792331401/login_nl_cover?e=2147483647&v=beta&t=2JAw5A2BBCd-5HDuUfdOcZDbdPiXKnDysc3kf-kwKyg"
