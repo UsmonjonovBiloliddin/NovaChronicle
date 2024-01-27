@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { image } from "../../constants/index";
 import {
-	registerError,
-	registerStart,
-	registerSuccess,
+	signUserStart,
+	signUserSuccess,
+	signUserError,
 } from "../../slice/auth";
 import { Input } from "../../ui";
 import { useSelector, useDispatch } from "react-redux";
 import AuthService from "../../service/auth";
+import { useNavigate } from "react-router-dom";
+import {ValidationError} from "..";
 
 const Register = () => {
 	const [userName, setuserName] = useState();
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
-
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { isLoading } = useSelector((state) => state.auth);
+	const { isLoading , loggedIn} = useSelector((state) => state.auth);
 
 	const registerHandler = async (e) => {
 		e.preventDefault();
-		dispatch(registerStart());
+		dispatch(signUserStart());
 
 		const user = {
 			username: userName,
@@ -28,17 +30,24 @@ const Register = () => {
 		};
 		try {
 			const response = await AuthService.userRegister(user);
-			dispatch(registerSuccess(response.user));
+			dispatch(signUserSuccess(response.user));
+			navigate("/")
 		} catch (error) {
-			dispatch(registerError());
+			dispatch(signUserError(error.response.data.errors));
 		}
 	};
+
+	useEffect(() => {
+		if(loggedIn){
+			navigate('/')
+		}
+	} , [loggedIn])
 
 	return (
 		<form className="text-center w-25 mx-auto">
 			<img className="mb-4" src={image} alt="" width="72" height="57" />
 			<h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-
+			<ValidationError />
 			<Input
 				label={"UserName"}
 				placeholder={"Username"}

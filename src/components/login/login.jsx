@@ -1,33 +1,48 @@
 import { useDispatch, useSelector } from "react-redux";
 import { image } from "../../constants/index";
 import { Input } from "../../ui";
-import { loginError, loginStart, loginSuccess } from "../../slice/auth";
-import { useState } from "react";
+import {
+	signUserStart,
+	signUserSuccess,
+	signUserError,
+} from "../../slice/auth";
+import { useEffect, useState } from "react";
 import AuthService from "../../service/auth";
+import { useNavigate } from "react-router-dom";
+import {ValidationError} from "..";
 const Login = () => {
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 
+	const navigate = useNavigate()
+
 	const dispatch = useDispatch();
-	const { isLoading } = useSelector((state) => state.auth);
+	const { isLoading , loggedIn} = useSelector((state) => state.auth);
 
 	const loginHandler = async (e) => {
 		e.preventDefault();
-		dispatch(loginStart());
+		dispatch(signUserStart());
 		const user = { email, password };
 		try {
 			const response = await AuthService.userLogin(user);
-			dispatch(loginSuccess(response.user));
+			dispatch(signUserSuccess(response.user));
+			navigate('/')
 		} catch (error) {
-			dispatch(loginError());
+			dispatch(signUserError(error.response.data.errors));
 		}
 	};
+
+	useEffect(() => {
+		if(loggedIn){
+			navigate('/')
+		}
+	} , [loggedIn])
 
 	return (
 		<form className="text-center w-25 mx-auto">
 			<img className="mb-4" src={image} alt="" width="72" height="57" />
 			<h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-
+			<ValidationError />
 			<Input
 				label={"Email address"}
 				type={"email"}

@@ -1,46 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setItem } from "../helpers/persistance-storage";
 
 const initialState = {
-    isLoading: false,
-    loggedIn: false,
-    user: null,
-    error: null
-}
+	isLoading: false,
+	loggedIn: false,
+	user: null,
+	error: null,
+};
 
 const authService = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-        //Login
-        loginStart: (state) => {
-            state.isLoading = true
-        },
-        loginSuccess: (state , actions) => {
-            state.isLoading = false
-            state.loggedIn = true
-            state.user = actions.payload
-        },
-        loginError: (state) => {
-            state.isLoading = false
-            state.error = "Error"
-        },
+	name: "auth",
+	initialState,
+	reducers: {
+		signUserStart: (state) => {
+			state.isLoading = true;
+		},
+		signUserSuccess: (state, actions) => {
+			state.isLoading = false;
+			state.loggedIn = true;
+			state.user = actions.payload;
+			setItem("token" , actions.payload.token)
+			state.error = null
+		},
+		signUserError: (state , actions) => {
+			state.isLoading = false;
+			state.error = actions.payload
+		},
 
-        // Register 
-        registerStart: (state) => {
-            state.isLoading = true
-        },
-        registerSuccess: (state , actions) => {
-            state.isLoading = false
-            state.loggedIn = true
-            state.user = actions.payload
-        },
-        registerError: (state) => {
-            state.isLoading = false
-            state.error = "Error"
-        },
-    }
-})
+		logoutUser: state => {
+			state.loggedIn = false;
+			state.user = null;
+		}
+	},
+});
 
-export const {loginStart, loginSuccess, loginError , registerStart , registerSuccess , registerError } = authService.actions
+export const {
+	signUserStart,
+    signUserSuccess,
+    signUserError,
+	logoutUser
+} = authService.actions;
 
-export default authService.reducer
+export default authService.reducer;

@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { removeItem } from "../../helpers/persistance-storage";
+import { logoutUser } from "../../slice/auth";
 
 const Navbar = () => {
+	const { loggedIn, user } = useSelector((state) => state.auth);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const logoutHandler = () => {
+		dispatch(logoutUser());
+		removeItem("token");
+		navigate("/login");
+	};
 	return (
 		<div className="d-flex flex-column flex-md-row align-items-center p-3  mb-4 border-bottom">
 			<a
@@ -28,18 +39,29 @@ const Navbar = () => {
 			</a>
 
 			<nav className="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-				<Link
-					to={"/login"}
-					className="me-3 py-2 link-body-emphasis text-decoration-none"
-				>
-					Login
-				</Link>
-				<Link
-					to={"/register"}
-					className="me-3 py-2 link-body-emphasis text-decoration-none"
-				>
-					Register
-				</Link>
+				{loggedIn ? (
+					<div className="d-flex align-items-center ">
+						<p className="mt-3 me-3">{user.username}</p>
+						<button onClick={logoutHandler} className="btn btn-danger">
+							Logout
+						</button>
+					</div>
+				) : (
+					<>
+						<Link
+							to={"/login"}
+							className="me-3 py-2 link-body-emphasis text-decoration-none"
+						>
+							Login
+						</Link>
+						<Link
+							to={"/register"}
+							className="me-3 py-2 link-body-emphasis text-decoration-none"
+						>
+							Register
+						</Link>
+					</>
+				)}
 			</nav>
 		</div>
 	);
