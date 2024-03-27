@@ -22,6 +22,7 @@ const ArticleDetail = () => {
 			console.log(error);
 		}
 	};
+	
 
 	useEffect(() => {
 		getDetailArticles();
@@ -38,7 +39,7 @@ const ArticleDetail = () => {
 						<p className="col-md-8 fs-4">{articleDetail.description}</p>
 						<p className="text-muted">
 							<span className="fw-bold">Created at:</span>{" "}
-							{moment(articleDetail.createdAt).format("DD MMM, YYYY")}
+							{moment(articleDetail.createdAt).format("DD MM, YYYY")}
 						</p>
 						<div className="col-md-6">
 							<div className="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">

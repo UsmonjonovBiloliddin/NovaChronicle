@@ -13,9 +13,7 @@ import {ValidationError} from "..";
 const Login = () => {
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
-
 	const navigate = useNavigate()
-
 	const dispatch = useDispatch();
 	const { isLoading , loggedIn} = useSelector((state) => state.auth);
 

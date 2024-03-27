@@ -1,5 +1,5 @@
 import { Routes , Route} from "react-router-dom";
-import {Navbar, Main , Login , Register , PageNotFound, ArticleDetail} from "./components"
+import {Navbar, Main , Login , Register , PageNotFound, ArticleDetail, CreateArticle, EditArticle} from "./components"
 import { useEffect } from "react";
 import AuthService from "./service/auth";
 import { useDispatch } from "react-redux";
@@ -22,15 +22,15 @@ const App = () => {
   }
 
 
-  const getArticles = async () => {
-    dispatch(articleStart())
-    try {
-        const response = await ArticleService.getArticle()
-        dispatch(articleSuccess(response.articles))
-    } catch (error) {
-        console.log(error)
-    }
-  }
+  // const getArticles = async () => {
+  //   dispatch(articleStart())
+  //   try {
+  //       const response = await ArticleService.getArticle()
+  //       dispatch(articleSuccess(response.articles))
+  //   } catch (error) {
+  //       console.log(error)
+  //   }
+  // }
 
 
 
@@ -41,7 +41,6 @@ const App = () => {
       getUser()
     }
 
-    getArticles()
   }, [])
 
 
@@ -54,6 +53,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/article/:slug" element={<ArticleDetail />}  />
+        <Route path="/create_article" element={<CreateArticle />}  />
+        <Route path="/edit_article/:slug" element={<EditArticle />}  />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
 		</div>
